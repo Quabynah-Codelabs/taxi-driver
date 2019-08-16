@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "850426853175",
+    "firebase_url": "https://testcommon-e7cfe.firebaseio.com",
+    "project_id": "testcommon-e7cfe",
+    "storage_bucket": "testcommon-e7cfe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850426853175:android:cb86f054fc7ca7d7",
+        "android_client_info": {
+          "package_name": "com.innomalist.taxi.common"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850426853175-bep55a188rrnkdhqagqp8t8pj6e0tuh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXyEP20FOlobwZ-IKdPUzB6mkJHsryp3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850426853175-bep55a188rrnkdhqagqp8t8pj6e0tuh7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
