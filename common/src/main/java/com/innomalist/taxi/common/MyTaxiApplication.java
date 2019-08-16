@@ -6,7 +6,7 @@ import androidx.multidex.MultiDex;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.firebase.FirebaseApp;
-import com.onesignal.OneSignal;
+//import com.onesignal.OneSignal;
 
 public class MyTaxiApplication extends Application {
     @Override
