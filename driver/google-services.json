@@ -15,11 +15,56 @@
       },
       "oauth_client": [
         {
+          "client_id": "850426853175-2i6i10uo8rglvglf4buipdopgdh22v2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innomalist.taxi.driver",
+            "certificate_hash": "b6c0c216debedfe32b3dd3cdf1f118bcd592ed4f"
+          }
+        },
+        {
           "client_id": "850426853175-rqv7fhnsttis4r55hftaeumugahpj4hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.innomalist.taxi.driver",
             "certificate_hash": "00afc63bf321dcd662cb0f38e7bedfec26a25f34"
+          }
+        },
+        {
+          "client_id": "850426853175-bep55a188rrnkdhqagqp8t8pj6e0tuh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXyEP20FOlobwZ-IKdPUzB6mkJHsryp3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850426853175-bep55a188rrnkdhqagqp8t8pj6e0tuh7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850426853175:android:af2e4d388ae851bd",
+        "android_client_info": {
+          "package_name": "com.innomalist.taxi.rider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850426853175-qu5ij8jv9gq2vtmp60isf1le7vc212l4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innomalist.taxi.rider",
+            "certificate_hash": "b6c0c216debedfe32b3dd3cdf1f118bcd592ed4f"
           }
         },
         {
@@ -52,6 +97,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "850426853175-djuffba01a6qe2t42gjtv424qs1hc25m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minimal.taxi.driver",
+            "certificate_hash": "b6c0c216debedfe32b3dd3cdf1f118bcd592ed4f"
+          }
+        },
+        {
           "client_id": "850426853175-bep55a188rrnkdhqagqp8t8pj6e0tuh7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -80,6 +133,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "850426853175-0hef029o4nsd9allmqhrd3pqe6hsohnm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minimal.taxi.rider",
+            "certificate_hash": "b6c0c216debedfe32b3dd3cdf1f118bcd592ed4f"
+          }
+        },
         {
           "client_id": "850426853175-l0h4pkfqv84l02hpaj3hqgsl4a32acbb.apps.googleusercontent.com",
           "client_type": 1,
