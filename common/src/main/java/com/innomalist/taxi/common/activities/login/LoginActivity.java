@@ -180,7 +180,6 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onRequestValidation(RequestSMSEvent event) {
         try {
