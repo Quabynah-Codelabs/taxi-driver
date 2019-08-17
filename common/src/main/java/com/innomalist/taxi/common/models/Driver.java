@@ -12,79 +12,112 @@ import com.innomalist.taxi.common.BR;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Driver extends BaseObservable implements Serializable{
-	@SerializedName("registration_timestamp")
-	private Timestamp registrationTimestamp;
+public class Driver extends BaseObservable implements Serializable {
+    @SerializedName("registration_timestamp")
+    private Timestamp registrationTimestamp;
 
-	@SerializedName("account_number")
-	private String accountNumber;
+    @SerializedName("account_number")
+    private String accountNumber;
 
-	@SerializedName("media")
+    @SerializedName("media")
     private Media media;
 
-	@SerializedName("car_media")
+    @SerializedName("car_media")
     private Media carMedia;
 
-	@Expose
-	@SerializedName("car_plate")
-	private String carPlate;
+    @Expose
+    @SerializedName("car_plate")
+    private String carPlate;
 
     @Expose
-	@SerializedName("address")
-	private String address;
+    @SerializedName("address")
+    private String address;
 
     @Expose
-	@SerializedName("gender")
-	private Gender gender;
+    @SerializedName("gender")
+    private Gender gender;
 
-	@SerializedName("rating")
-	private Integer rating;
+    @SerializedName("rating")
+    private Integer rating;
 
-	@SerializedName("info_changed")
-	private int infoChanged;
-
-    @Expose
-	@SerializedName("last_name")
-	private String lastName;
-
-	@SerializedName("review_count")
-	private int reviewCount;
+    @SerializedName("info_changed")
+    private int infoChanged;
 
     @Expose
-	@SerializedName("car_color")
-	private String carColor;
+    @SerializedName("last_name")
+    private String lastName;
 
-	@SerializedName("certificate_number")
-	private String certificateNumber;
-
-	@SerializedName("password")
-	private String password;
-
-	@SerializedName("balance")
-	private Double balance;
-
-	@SerializedName("car_production_year")
-	private Integer carProductionYear;
-
-	@SerializedName("id")
-	private int id;
-
-	@SerializedName("mobile_number")
-	private long mobileNumber;
+    @SerializedName("review_count")
+    private int reviewCount;
 
     @Expose
-	@SerializedName("first_name")
-	private String firstName;
+    @SerializedName("car_color")
+    private String carColor;
 
-	@SerializedName("car")
-	private Car car;
+    @SerializedName("certificate_number")
+    private String certificateNumber;
+
+    @SerializedName("password")
+    private String password;
+
+    @SerializedName("balance")
+    private Double balance;
+
+    @SerializedName("car_production_year")
+    private Integer carProductionYear;
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("mobile_number")
+    private long mobileNumber;
 
     @Expose
-	@SerializedName("email")
-	private String email;
+    @SerializedName("first_name")
+    private String firstName;
 
-	@SerializedName("status")
-	private String status;
+    @SerializedName("car")
+    private Car car;
+
+    @Expose
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("status")
+    private String status;
+
+    public Driver() {
+    }
+
+    public Driver(Timestamp registrationTimestamp, String accountNumber, Media media,
+                  Media carMedia, String carPlate, String address, Gender gender,
+                  Integer rating, int infoChanged, String lastName, int reviewCount,
+                  String carColor, String certificateNumber, String password, Double balance,
+                  Integer carProductionYear,
+                  int id, long mobileNumber, String firstName, Car car, String email, String status) {
+        this.registrationTimestamp = registrationTimestamp;
+        this.accountNumber = accountNumber;
+        this.media = media;
+        this.carMedia = carMedia;
+        this.carPlate = carPlate;
+        this.address = address;
+        this.gender = gender;
+        this.rating = rating;
+        this.infoChanged = infoChanged;
+        this.lastName = lastName;
+        this.reviewCount = reviewCount;
+        this.carColor = carColor;
+        this.certificateNumber = certificateNumber;
+        this.password = password;
+        this.balance = balance;
+        this.carProductionYear = carProductionYear;
+        this.id = id;
+        this.mobileNumber = mobileNumber;
+        this.firstName = firstName;
+        this.car = car;
+        this.email = email;
+        this.status = status;
+    }
 
     public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
@@ -109,7 +142,8 @@ public class Driver extends BaseObservable implements Serializable{
 
     public void setMedia(Media media) {
         this.media = media;
-        notifyPropertyChanged(BR.media);
+        // todo bind media
+        notifyPropertyChanged(BR._all);
     }
 
     @Bindable
@@ -119,7 +153,8 @@ public class Driver extends BaseObservable implements Serializable{
 
     public void setCarMedia(Media carMedia) {
         this.carMedia = carMedia;
-        notifyPropertyChanged(BR.carMedia);
+        // todo bind carMedia
+        notifyPropertyChanged(BR._all);
     }
 
     public String getCarPlate() {
@@ -268,9 +303,139 @@ public class Driver extends BaseObservable implements Serializable{
         this.status = status;
     }
 
-    public String toJson(){
+    public String toJson() {
         GsonBuilder b = new GsonBuilder();
         Gson gson = b.excludeFieldsWithoutExposeAnnotation().create();
         return gson.toJson(this);
+    }
+
+    public static class Builder {
+        Timestamp registrationTimestamp;
+        Media media, carMedia;
+        Double balance;
+        Gender gender;
+        Car car;
+        String accountNumber, carPlate, address, lastName, carColor, certificateNumber,
+                password, firstName, status, email;
+        Integer rating, carProductionYear;
+        int infoChanged, reviewCount, id;
+        long mobileNumber;
+
+        public Builder setRegistrationTimestamp(Timestamp registrationTimestamp) {
+            this.registrationTimestamp = registrationTimestamp;
+            return this;
+        }
+
+        public Builder setMedia(Media media) {
+            this.media = media;
+            return this;
+        }
+
+        public Builder setCarMedia(Media carMedia) {
+            this.carMedia = carMedia;
+            return this;
+        }
+
+        public Builder setBalance(Double balance) {
+            this.balance = balance;
+            return this;
+        }
+
+        public Builder setGender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder setCar(Car car) {
+            this.car = car;
+            return this;
+        }
+
+        public Builder setAccountNumber(String accountNumber) {
+            this.accountNumber = accountNumber;
+            return this;
+        }
+
+        public Builder setCarPlate(String carPlate) {
+            this.carPlate = carPlate;
+            return this;
+        }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setCarColor(String carColor) {
+            this.carColor = carColor;
+            return this;
+        }
+
+        public Builder setCertificateNumber(String certificateNumber) {
+            this.certificateNumber = certificateNumber;
+            return this;
+        }
+
+        public Builder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setRating(Integer rating) {
+            this.rating = rating;
+            return this;
+        }
+
+        public Builder setCarProductionYear(Integer carProductionYear) {
+            this.carProductionYear = carProductionYear;
+            return this;
+        }
+
+        public Builder setInfoChanged(int infoChanged) {
+            this.infoChanged = infoChanged;
+            return this;
+        }
+
+        public Builder setReviewCount(int reviewCount) {
+            this.reviewCount = reviewCount;
+            return this;
+        }
+
+        public Builder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setMobileNumber(long mobileNumber) {
+            this.mobileNumber = mobileNumber;
+            return this;
+        }
+
+        public Driver build() {
+            return new Driver(this.registrationTimestamp, accountNumber, media, carMedia, carPlate, address,
+                    Gender.male, rating, infoChanged, lastName, reviewCount, carColor,
+                    certificateNumber, password, balance, carProductionYear, id, mobileNumber, firstName, car,
+                    email, status);
+        }
     }
 }

@@ -2,11 +2,12 @@ package com.innomalist.taxi.driver.activities.splash;
 
 import android.Manifest;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
@@ -19,13 +20,14 @@ import com.innomalist.taxi.common.components.BaseActivity;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
-import com.innomalist.taxi.common.events.LoginEvent;
+import com.innomalist.taxi.common.models.Car;
 import com.innomalist.taxi.common.models.Driver;
+import com.innomalist.taxi.common.models.Gender;
+import com.innomalist.taxi.common.models.Media;
 import com.innomalist.taxi.common.utils.AlertDialogBuilder;
 import com.innomalist.taxi.common.utils.AlerterHelper;
 import com.innomalist.taxi.common.utils.CommonUtils;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
-import com.innomalist.taxi.driver.BuildConfig;
 import com.innomalist.taxi.driver.DriverEventBusIndex;
 import com.innomalist.taxi.driver.R;
 import com.innomalist.taxi.driver.activities.main.MainActivity;
@@ -193,7 +195,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void startMainActivity() {
-        if(startRequested)
+        if (startRequested)
             return;
         startRequested = true;
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -206,7 +208,31 @@ public class SplashActivity extends BaseActivity {
         goToLoadingMode();
         if (phone.substring(0, 1).equals("+"))
             phone = phone.substring(1);
-        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
+
+        // todo: get from database server
+        CommonUtils.driver = new Driver.Builder()
+                .setMobileNumber(Long.parseLong(phone))
+                .setFirstName("Quabynah")
+                .setLastName("Bilson")
+                .setCar(new Car())
+                .setCarColor("")
+                .setAddress("")
+                .setAccountNumber("1234234556778890")
+                .setBalance(2355.99)
+                .setCarPlate("GT-23-19")
+                .setCarProductionYear(2019)
+                .setCertificateNumber("232343")
+                .setCarMedia(new Media())
+                .setMedia(new Media())
+                .setStatus("live")
+                .setReviewCount(4)
+                .setPassword("1234576")
+                .setEmail("demo@driver.com")
+                .setGender(Gender.male)
+                .setInfoChanged(1)
+                .build();
+        startMainActivity();
+//        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
     }
 
     private void goToLoadingMode() {

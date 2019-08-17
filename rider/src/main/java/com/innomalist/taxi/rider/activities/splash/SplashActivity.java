@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +12,8 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
@@ -29,14 +30,15 @@ import com.innomalist.taxi.common.components.BaseActivity;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
-import com.innomalist.taxi.common.events.LoginEvent;
+import com.innomalist.taxi.common.models.Gender;
+import com.innomalist.taxi.common.models.Media;
 import com.innomalist.taxi.common.models.Rider;
 import com.innomalist.taxi.common.utils.AlertDialogBuilder;
 import com.innomalist.taxi.common.utils.AlerterHelper;
 import com.innomalist.taxi.common.utils.CommonUtils;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.LocationHelper;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
-import com.innomalist.taxi.rider.BuildConfig;
 import com.innomalist.taxi.rider.R;
 import com.innomalist.taxi.rider.RiderEventBusIndex;
 import com.innomalist.taxi.rider.activities.main.MainActivity;
@@ -48,7 +50,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,10 +74,11 @@ public class SplashActivity extends BaseActivity implements LocationListener {
                     .addOnSuccessListener(SplashActivity.this, location -> {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            currentLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                            currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            Debugger.logMessage("Current location: " + currentLocation);
                         }
                     });
-        boolean isServiceRunning = isMyServiceRunning(RiderService.class);
+            boolean isServiceRunning = isMyServiceRunning(RiderService.class);
             if (!isServiceRunning)
                 startService(new Intent(SplashActivity.this, RiderService.class));
         }
@@ -88,6 +90,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
                 startService(new Intent(SplashActivity.this, RiderService.class));
         }
     };
+
     private View.OnClickListener onLoginButtonClicked = v -> {
         String resourceName = "testMode";
         int testExists = SplashActivity.this.getResources().getIdentifier(resourceName, "string", SplashActivity.this.getPackageName());
@@ -160,7 +163,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
     }
 
     private void startMainActivity(LatLng latLng) {
-        if(goingToOpen)
+        if (goingToOpen)
             return;
         goingToOpen = true;
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -222,7 +225,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
                 double lng = Double.parseDouble(location[1]);
                 currentLocation = new LatLng(lat, lng);
             }
-            if(isErrored)
+            if (isErrored)
                 return;
             startMainActivity(currentLocation);
 
@@ -247,15 +250,28 @@ public class SplashActivity extends BaseActivity implements LocationListener {
         goToLoadingMode();
         if (phone.substring(0, 1).equals("+"))
             phone = phone.substring(1);
-        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
+        CommonUtils.rider = new Rider.Builder()
+                .setMobileNumber(Long.parseLong(phone))
+                .setFirstName("Dennis")
+                .setLastName("Bilson")
+                .setId(System.currentTimeMillis())
+                .setGender(Gender.male)
+                .setBalance(98.77)
+                .setEmail("demo@gmail.com")
+                .setStatus("live")
+                .setMedia(new Media())
+                .build();
+        startMainActivity(currentLocation);
+        // todo: do some phone auth process
+//        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
     }
 
-    private void goToLoadingMode(){
+    private void goToLoadingMode() {
         binding.loginButton.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void goToLoginMode(){
+    private void goToLoginMode() {
         binding.loginButton.setVisibility(View.VISIBLE);
         binding.progressBar.setVisibility(View.GONE);
     }

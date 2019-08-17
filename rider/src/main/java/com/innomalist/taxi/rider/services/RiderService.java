@@ -42,6 +42,7 @@ import com.innomalist.taxi.common.events.WriteComplaintResultEvent;
 import com.innomalist.taxi.common.models.CRUD;
 import com.innomalist.taxi.common.models.Rider;
 import com.innomalist.taxi.common.utils.CommonUtils;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
 import com.innomalist.taxi.common.utils.ServerResponse;
 import com.innomalist.taxi.rider.BuildConfig;
@@ -162,6 +163,7 @@ public class RiderService extends Service {
 
     @Subscribe
     public void login(LoginEvent event) {
+        Debugger.logMessage("Login event started");
         new LoginRequest().execute(String.valueOf(event.userName), String.valueOf(event.versionNumber));
     }
 
@@ -199,6 +201,7 @@ public class RiderService extends Service {
                     sb.append(line);
                 return sb.toString();
             } catch (Exception c) {
+                Debugger.logMessage(c.getLocalizedMessage());
                 c.printStackTrace();
                 return null;
             }

@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import com.innomalist.taxi.common.BR;
 
 public class Rider extends BaseObservable {
+
+
     public long id;
     @Expose
     @SerializedName("first_name")
@@ -46,6 +48,86 @@ public class Rider extends BaseObservable {
     public static String toJson(Rider rider) {
         return (new GsonBuilder().excludeFieldsWithoutExposeAnnotation()).create().toJson(rider);
     }
+
+    public Rider() {
+    }
+
+    public Rider(long id, String firstName, String lastName, Media media, long mobileNumber, String status, String email, Gender gender, Double balance, String address) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.media = media;
+        this.mobileNumber = mobileNumber;
+        this.status = status;
+        this.email = email;
+        this.gender = gender;
+        this.balance = balance;
+        this.address = address;
+    }
+
+    public static class Builder {
+        long id, mobileNumber;
+        Gender gender;
+        String firstName, lastName, status, email, address;
+        Double balance;
+        Media media;
+
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setMobileNumber(long mobileNumber) {
+            this.mobileNumber = mobileNumber;
+            return this;
+        }
+
+        public Builder setGender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setBalance(Double balance) {
+            this.balance = balance;
+            return this;
+        }
+
+        public Builder setMedia(Media media) {
+            this.media = media;
+            return this;
+        }
+
+        public Rider build() {
+            return new Rider(this.id, this.firstName, this.lastName,this.media, this.mobileNumber,
+                    this.status, this.email, this.gender, this.balance, this.address);
+        }
+    }
+
     @Bindable
     public Gender getGender() {
         return this.gender;
@@ -128,7 +210,8 @@ public class Rider extends BaseObservable {
 
     public void setMedia(Media media) {
         this.media = media;
-        notifyPropertyChanged(BR.media);
+        // todo : update media
+        notifyPropertyChanged(BR._all);
     }
 
     public Double getBalance() {

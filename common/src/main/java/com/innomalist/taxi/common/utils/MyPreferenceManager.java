@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class MyPreferenceManager {
-
-    private static MyPreferenceManager instance;
+    private static volatile MyPreferenceManager instance;
     private SharedPreferences SP;
 
     public MyPreferenceManager(Context mContext) {
@@ -34,8 +33,15 @@ public class MyPreferenceManager {
     public String getString(String key, String defValue) {
         return SP.getString(key, defValue);
     }
-    public boolean putLong(String key, long value) { return getEditor().putLong(key, value).commit(); }
-    public long getLong(String key, long defValue) { return SP.getLong(key,defValue);}
+
+    public boolean putLong(String key, long value) {
+        return getEditor().putLong(key, value).commit();
+    }
+
+    public long getLong(String key, long defValue) {
+        return SP.getLong(key, defValue);
+    }
+
     public void putInt(String key, int value) {
         getEditor().putInt(key, value).commit();
     }

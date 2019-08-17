@@ -9,20 +9,22 @@ import android.transition.Fade;
 import android.util.TypedValue;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.innomalist.taxi.common.R;
 import com.innomalist.taxi.common.events.SocketConnectionEvent;
 import com.innomalist.taxi.common.utils.AlertDialogBuilder;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.LocaleHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import io.socket.client.Socket;
 
 public class BaseActivity extends AppCompatActivity {
@@ -36,15 +38,18 @@ public class BaseActivity extends AppCompatActivity {
     public boolean showConnectionDialog = true;
     //This value is a trick to sustain socket connection better. if this value is set to false it means the activity has been restarted to original state so a finish would be a good idea to do then.
     private boolean safeValue = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         safeValue = true;
         super.onCreate(savedInstanceState);
-        if(registerEventBus)
+        if (registerEventBus)
             eventBus = EventBus.getDefault();
         setupWindowAnimations();
         screenDensity = getApplicationContext().getResources().getDisplayMetrics().density;
         setActivityTheme(BaseActivity.this);
+
+        Debugger.logMessage("Current context: " + this.getLocalClassName());
     }
 
     @Override
@@ -66,7 +71,7 @@ public class BaseActivity extends AppCompatActivity {
     public int getAccentColor() {
         TypedValue typedValue = new TypedValue();
 
-        TypedArray a = this.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+        TypedArray a = this.obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorAccent});
         int color = a.getColor(0, 0);
 
         a.recycle();
@@ -77,7 +82,7 @@ public class BaseActivity extends AppCompatActivity {
     public int getPrimaryColor() {
         TypedValue typedValue = new TypedValue();
 
-        TypedArray a = this.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        TypedArray a = this.obtainStyledAttributes(typedValue.data, new int[]{R.attr.colorPrimary});
         int color = a.getColor(0, 0);
 
         a.recycle();
@@ -93,6 +98,7 @@ public class BaseActivity extends AppCompatActivity {
             getWindow().setExitTransition(new Fade());
         }
     }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -106,6 +112,7 @@ public class BaseActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
     public int getCurrentTheme() {
         return R.style.Theme_Default;
     }
@@ -113,28 +120,29 @@ public class BaseActivity extends AppCompatActivity {
     private void setActivityTheme(AppCompatActivity activity) {
         activity.setTheme(getCurrentTheme());
     }
+
     @Override
     public void onStart() {
         super.onStart();
-        if(registerEventBus)
+        if (registerEventBus)
             eventBus.register(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectionEventReceived(SocketConnectionEvent event){
-        if(!showConnectionDialog)
+    public void onConnectionEventReceived(SocketConnectionEvent event) {
+        if (!showConnectionDialog)
             return;
         int eventResourceId = this.getResources().getIdentifier("event_" + event.event, "string", this.getPackageName());
         String message = event.event;
         if (eventResourceId > 0)
             message = this.getString(eventResourceId);
 
-        if(event.event.equals(Socket.EVENT_CONNECT)) {
-            if(connectionProgressDialog != null)
+        if (event.event.equals(Socket.EVENT_CONNECT)) {
+            if (connectionProgressDialog != null)
                 connectionProgressDialog.dismiss();
             return;
         }
-        if(connectionProgressDialog == null) {
+        if (connectionProgressDialog == null) {
             connectionProgressDialog = new MaterialDialog.Builder(this)
                     .title(getString(R.string.connection_dialog_title))
                     .content(message)
@@ -149,7 +157,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        if(registerEventBus)
+        if (registerEventBus)
             eventBus.unregister(this);
         super.onStop();
     }
@@ -157,7 +165,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!safeValue)
+        if (!safeValue)
             finish();
         isInForeground = true;
 

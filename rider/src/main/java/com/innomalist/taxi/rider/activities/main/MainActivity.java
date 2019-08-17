@@ -79,6 +79,7 @@ import com.innomalist.taxi.common.utils.AlertDialogBuilder;
 import com.innomalist.taxi.common.utils.AlerterHelper;
 import com.innomalist.taxi.common.utils.CommonUtils;
 import com.innomalist.taxi.common.utils.DataBinder;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.LocationHelper;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
 import com.innomalist.taxi.common.utils.ServerResponse;
@@ -159,6 +160,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        Debugger.logMessage("Current location: " + currentLocation);
     }
 
     @Override
