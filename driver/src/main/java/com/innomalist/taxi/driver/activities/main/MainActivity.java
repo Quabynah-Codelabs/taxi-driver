@@ -44,14 +44,13 @@ import com.innomalist.taxi.common.components.LoadingDialog;
 import com.innomalist.taxi.common.events.AcceptOrderEvent;
 import com.innomalist.taxi.common.events.GetStatusEvent;
 import com.innomalist.taxi.common.events.GetStatusResultEvent;
-import com.innomalist.taxi.common.events.NotificationPlayerId;
 import com.innomalist.taxi.common.events.ProfileInfoChangedEvent;
-import com.innomalist.taxi.common.location.MapHelper;
 import com.innomalist.taxi.common.models.Travel;
 import com.innomalist.taxi.common.utils.AlertDialogBuilder;
 import com.innomalist.taxi.common.utils.AlerterHelper;
 import com.innomalist.taxi.common.utils.CommonUtils;
 import com.innomalist.taxi.common.utils.DataBinder;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
 import com.innomalist.taxi.common.utils.ServerResponse;
 import com.innomalist.taxi.driver.R;
@@ -74,9 +73,6 @@ import com.innomalist.taxi.driver.events.RiderAcceptedEvent;
 import com.innomalist.taxi.driver.events.StartTrackingRequestEvent;
 import com.innomalist.taxi.driver.events.StopTrackingRequestEvent;
 import com.innomalist.taxi.driver.ui.DriverBaseActivity;
-//import com.onesignal.OSSubscriptionObserver;
-//import com.onesignal.OSSubscriptionStateChanges;
-//import com.onesignal.OneSignal;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -85,6 +81,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.greenrobot.eventbus.ThreadMode.MAIN;
+
+//import com.onesignal.OSSubscriptionObserver;
+//import com.onesignal.OSSubscriptionStateChanges;
+//import com.onesignal.OneSignal;
 
 public class MainActivity extends DriverBaseActivity implements OnMapReadyCallback, LocationListener, RequestFragment.OnFragmentInteractionListener/*, OSSubscriptionObserver*/ {
     MyPreferenceManager SP;
@@ -103,10 +103,14 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // todo: one signal add observer
 //        OneSignal.addSubscriptionObserver(this);
         binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            Debugger.logMessage("Initializing maps");
+            mapFragment.getMapAsync(this);
+        }
         requestCardsAdapter = new RequestsFragmentPagerAdapter(getSupportFragmentManager(), new ArrayList<>());
         binding.requestsViewPager.setAdapter(requestCardsAdapter);
         binding.requestsViewPager.setOffscreenPageLimit(3);
@@ -136,7 +140,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
                 case (R.id.nav_item_charge_account):
                     startActivityForResult(new Intent(MainActivity.this, ChargeAccountActivity.class), ACTIVITY_WALLET);
                     break;
-                case(R.id.nav_item_transactions):
+                case (R.id.nav_item_transactions):
                     startActivity(new Intent(MainActivity.this, TransactionsActivity.class));
                     break;
                 case (R.id.nav_item_about):
@@ -203,10 +207,10 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
 
     }
 
-    @Subscribe (threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRequestsReceived(GetRequestsResultEvent event) {
         loadingRequestsLoadingDialog.dismiss();
-        if(event.response == ServerResponse.DRIVER_IS_OFFLINE) {
+        if (event.response == ServerResponse.DRIVER_IS_OFFLINE) {
             binding.switchConnection.setOnCheckedChangeListener(null);
             binding.switchConnection.setChecked(false);
             binding.switchConnection.setOnCheckedChangeListener(onConnectionSwitchChanged);
@@ -225,7 +229,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
 
     }
 
-    @Subscribe( threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAnotherDriverAcceptedRequest(CancelRequestEvent event) {
         LoadingDialog.dismiss();
         int position = requestCardsAdapter.getPositionWithTravelId(event.travelId);
@@ -269,7 +273,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
     public void onRiderAccepted(RiderAcceptedEvent event) {
         LoadingDialog.dismiss();
         Intent intentTravel = new Intent(MainActivity.this, TravelActivity.class);
-        intentTravel.putExtra("travel",event.travel.toJson());
+        intentTravel.putExtra("travel", event.travel.toJson());
         intentTravel.putExtra("driverLat", markerDriver.getPosition().latitude);
         intentTravel.putExtra("driverLng", markerDriver.getPosition().longitude);
         startActivityForResult(intentTravel, ACTIVITY_TRAVEL);
@@ -278,7 +282,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDriverAcceptedResult(AcceptOrderResultEvent event) {
         Intent intentTravel = new Intent(MainActivity.this, TravelActivity.class);
-        intentTravel.putExtra("travel",event.travel.toJson());
+        intentTravel.putExtra("travel", event.travel.toJson());
         intentTravel.putExtra("driverLat", markerDriver.getPosition().latitude);
         intentTravel.putExtra("driverLng", markerDriver.getPosition().longitude);
         startActivityForResult(intentTravel, ACTIVITY_TRAVEL);
@@ -427,7 +431,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
             return;
         AlertDialogBuilder.show(MainActivity.this, getString(R.string.recovery_travel_driver), getString(R.string.message_default_title), AlertDialogBuilder.DialogButton.OK, result -> {
             Intent intent = new Intent(MainActivity.this, TravelActivity.class);
-            intent.putExtra("travel",event.travel.toJson());
+            intent.putExtra("travel", event.travel.toJson());
             intent.putExtra("driverLat", markerDriver.getPosition().latitude);
             intent.putExtra("driverLng", markerDriver.getPosition().longitude);
             startActivityForResult(intent, ACTIVITY_TRAVEL);
@@ -444,14 +448,14 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
 
     @Override
     public void onVisible(Travel travel) {
-        if(markerPickup == null) {
+        if (markerPickup == null) {
             markerPickup = mMap.addMarker(new MarkerOptions()
                     .position(travel.getPickupPoint())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_pickup)));
         } else {
             markerPickup.setPosition(travel.getPickupPoint());
         }
-        if(markerDropOff == null) {
+        if (markerDropOff == null) {
             markerDropOff = mMap.addMarker(new MarkerOptions()
                     .position(travel.getDestinationPoint())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_destination)));
@@ -462,7 +466,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
         latLngs.add(travel.getPickupPoint());
         latLngs.add(travel.getDestinationPoint());
         latLngs.add(markerDriver.getPosition());
-        mMap.setPadding(0,0,0, 850);
+        mMap.setPadding(0, 0, 0, 850);
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (LatLng location : latLngs)
             builder.include(location);
@@ -478,13 +482,13 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
     }
 
     private void removeMarkers() {
-        if(markerPickup != null)
+        if (markerPickup != null)
             markerPickup.remove();
-        if(markerDropOff != null)
+        if (markerDropOff != null)
             markerDropOff.remove();
         markerPickup = null;
         markerDropOff = null;
-        mMap.setPadding(0,0,0,0);
+        mMap.setPadding(0, 0, 0, 0);
     }
 
 

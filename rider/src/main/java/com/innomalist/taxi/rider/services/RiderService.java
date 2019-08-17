@@ -8,9 +8,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import android.util.Log;
 
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ChangeProfileImageEvent;
@@ -56,6 +57,8 @@ import com.innomalist.taxi.rider.events.CRUDAddressRequestEvent;
 import com.innomalist.taxi.rider.events.CRUDAddressResultEvent;
 import com.innomalist.taxi.rider.events.CalculateFareRequestEvent;
 import com.innomalist.taxi.rider.events.CalculateFareResultEvent;
+import com.innomalist.taxi.rider.events.CancelRequestRequestEvent;
+import com.innomalist.taxi.rider.events.DriverAcceptedEvent;
 import com.innomalist.taxi.rider.events.GetCouponsRequestEvent;
 import com.innomalist.taxi.rider.events.GetCouponsResultEvent;
 import com.innomalist.taxi.rider.events.GetDriversLocationEvent;
@@ -65,10 +68,8 @@ import com.innomalist.taxi.rider.events.GetPromotionsResultEvent;
 import com.innomalist.taxi.rider.events.GetTravelInfoEvent;
 import com.innomalist.taxi.rider.events.GetTravelInfoResultEvent;
 import com.innomalist.taxi.rider.events.LoginResultEvent;
-import com.innomalist.taxi.rider.events.DriverAcceptedEvent;
 import com.innomalist.taxi.rider.events.ReviewDriverEvent;
 import com.innomalist.taxi.rider.events.ReviewDriverResultEvent;
-import com.innomalist.taxi.rider.events.CancelRequestRequestEvent;
 import com.innomalist.taxi.rider.events.ServiceFinishedEvent;
 import com.innomalist.taxi.rider.events.ServiceRequestErrorEvent;
 import com.innomalist.taxi.rider.events.ServiceRequestEvent;
@@ -121,15 +122,15 @@ public class RiderService extends Service {
                     .on(Socket.EVENT_RECONNECT_ATTEMPT, args -> eventBus.post(new SocketConnectionEvent(Socket.EVENT_RECONNECT_ATTEMPT)))
                     .on(Socket.EVENT_RECONNECT_ERROR, args -> eventBus.post(new SocketConnectionEvent(Socket.EVENT_RECONNECT_ERROR)))
                     .on(Socket.EVENT_RECONNECT_FAILED, args -> eventBus.post(new SocketConnectionEvent(Socket.EVENT_RECONNECT_FAILED)))
-            .on("error", args -> {
-                try {
-                    socket.disconnect();
-                    JSONObject obj = new JSONObject(args[0].toString());
-                    eventBus.post(new ConnectResultEvent(ServerResponse.UNKNOWN_ERROR.getValue(), obj.getString("message")));
-                } catch (JSONException c) {
-                    eventBus.post(new ConnectResultEvent(ServerResponse.UNKNOWN_ERROR.getValue(), args[0].toString()));
-                }
-            }).on("driverInLocation", args -> {
+                    .on("error", args -> {
+                        try {
+                            socket.disconnect();
+                            JSONObject obj = new JSONObject(args[0].toString());
+                            eventBus.post(new ConnectResultEvent(ServerResponse.UNKNOWN_ERROR.getValue(), obj.getString("message")));
+                        } catch (JSONException c) {
+                            eventBus.post(new ConnectResultEvent(ServerResponse.UNKNOWN_ERROR.getValue(), args[0].toString()));
+                        }
+                    }).on("driverInLocation", args -> {
                 try {
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(RiderService.this)
@@ -166,6 +167,7 @@ public class RiderService extends Service {
         Debugger.logMessage("Login event started");
         new LoginRequest().execute(String.valueOf(event.userName), String.valueOf(event.versionNumber));
     }
+
 
     @SuppressLint("StaticFieldLeak")
     private class LoginRequest extends AsyncTask<String, String, String> {
@@ -224,7 +226,7 @@ public class RiderService extends Service {
     }
 
     @Subscribe
-    public void getStatus(GetStatusEvent event){
+    public void getStatus(GetStatusEvent event) {
         socket.emit("getStatus", (Ack) args -> eventBus.post(new GetStatusResultEvent(args)));
     }
 

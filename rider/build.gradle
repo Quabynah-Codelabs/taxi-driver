@@ -40,6 +40,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('E:\\GitHub\\personal-projects\\taxi-driver\\keystore\\keystore.jks')
+            storePassword 'quabynah'
+            keyAlias = 'key0'
+            keyPassword 'quabynah'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
@@ -55,6 +63,7 @@ android {
                 // Project number pulled from dashboard, local value is ignored.
                 onesignal_google_project_number: 'REMOTE'
         ]
+        signingConfig signingConfigs.release
         dexOptions {
             jumboMode true
         }

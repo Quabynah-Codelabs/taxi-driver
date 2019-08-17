@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 
@@ -52,6 +53,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -113,6 +115,9 @@ public class SplashActivity extends BaseActivity implements LocationListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Executors.newSingleThreadExecutor().submit(() -> {
+            Toast.makeText(SplashActivity.this, "Hello world", Toast.LENGTH_SHORT).show();
+        });
         setImmersive(true);
         showConnectionDialog = false;
         try {

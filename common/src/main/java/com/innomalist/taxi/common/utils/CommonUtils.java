@@ -39,6 +39,6 @@ public class CommonUtils {
 
     public static boolean isGPSEnabled (AppCompatActivity activity){
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

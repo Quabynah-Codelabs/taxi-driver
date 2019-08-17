@@ -1,23 +1,25 @@
 package com.innomalist.taxi.common.events;
 
 import android.os.CountDownTimer;
-import android.util.Log;
 
 import com.innomalist.taxi.common.utils.CommonUtils;
+import com.innomalist.taxi.common.utils.Debugger;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class BaseRequestEvent {
     private BaseResultEvent resultEvent;
     CountDownTimer timer;
+
     public BaseRequestEvent() {
     }
-    public BaseRequestEvent(BaseResultEvent _resultEvent){
+
+    public BaseRequestEvent(BaseResultEvent _resultEvent) {
         resultEvent = _resultEvent;
-        timer = new CountDownTimer(15000,1000) {
+        timer = new CountDownTimer(15000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.e("Time Passing","1");
+                Debugger.logMessage("Time Passing = 1");
             }
 
             @Override
