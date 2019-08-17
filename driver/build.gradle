@@ -6,9 +6,9 @@ android {
     signingConfigs {
         release {
             storeFile file('E:\\GitHub\\personal-projects\\taxi-driver\\keystore\\driver\\keystore-driver.jks')
-            storePassword 'quabynah'
-            keyAlias = 'key0'
-            keyPassword 'quabynah'
+            storePassword "${password}"
+            keyAlias = "${alias}"
+            keyPassword "${password}"
         }
     }
     compileSdkVersion 29
