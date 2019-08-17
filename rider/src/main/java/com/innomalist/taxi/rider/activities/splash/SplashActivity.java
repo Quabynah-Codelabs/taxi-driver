@@ -115,9 +115,6 @@ public class SplashActivity extends BaseActivity implements LocationListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Executors.newSingleThreadExecutor().submit(() -> {
-            Toast.makeText(SplashActivity.this, "Hello world", Toast.LENGTH_SHORT).show();
-        });
         setImmersive(true);
         showConnectionDialog = false;
         try {
