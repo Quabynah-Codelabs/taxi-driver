@@ -9,7 +9,8 @@
     <string name="fabric_key" templateMergeStrategy="preserve" translatable="false"></string>
     <string name="stripe_publishable_key" translatable="false"></string>
     <string name="payment_currency" translatable="false">usd</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDXyEP20FOlobwZ-IKdPUzB6mkJHsryp3o</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAOtv5oXGXcgOQhQYFC7j4TFmIaLmZb_s0</string>
+<!--    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDXyEP20FOlobwZ-IKdPUzB6mkJHsryp3o</string>-->
     <string name="defaultLocation" translatable="false">40.1792,44.4991</string>
     <string name="theme" translatable="false">Amaranth</string>
     <string name="default_country_code" translatable="false"></string>
