@@ -161,7 +161,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        Debugger.logMessage("Current location: " + currentLocation);
+        prefs.setLastLocation(currentLocation);
     }
 
     @Override
@@ -517,6 +517,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
         TransitionManager.beginDelayedTransition((ViewGroup) binding.getRoot(), (new TransitionSet()).addTransition(new Fade()));
         binding.buttonConfirmDestination.setVisibility(View.GONE);
         binding.searchPlace.setVisibility(View.GONE);
+        // todo: calculate fare
         eventBus.post(new CalculateFareRequestEvent(travel.getPickupPoint(), travel.getDestinationPoint()));
     }
 
