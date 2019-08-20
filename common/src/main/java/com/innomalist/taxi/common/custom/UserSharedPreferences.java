@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.innomalist.taxi.common.models.Driver;
 import com.innomalist.taxi.common.models.Rider;
@@ -16,6 +17,8 @@ import java.util.List;
  * {@link SharedPreferences} class for keeping user's login state persisted
  */
 public final class UserSharedPreferences {
+    private static final String KEY_LAT = "lat";
+    private static final String KEY_LNG = "lng";
     private final Context context;
     private final SharedPreferences prefs;
     private final FirebaseAuth auth;
@@ -114,6 +117,17 @@ public final class UserSharedPreferences {
         dispatchLogoutEvent();
 
         // todo: remove from database
+    }
+
+    public void setLastLocation(LatLng location) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putFloat(KEY_LAT, (float) location.latitude);
+        editor.putFloat(KEY_LNG, (float) location.longitude);
+        editor.apply();
+    }
+
+    public LatLng getLastLocation() {
+        return new LatLng(prefs.getFloat(KEY_LAT, 5.53218389f), prefs.getFloat(KEY_LNG, -0.25942889f));
     }
 
     public interface LoginStateListener {

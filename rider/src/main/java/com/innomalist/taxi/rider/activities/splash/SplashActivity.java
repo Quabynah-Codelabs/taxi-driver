@@ -79,7 +79,7 @@ public class SplashActivity extends BaseActivity implements LocationListener, Us
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            Debugger.logMessage("Current location: " + currentLocation);
+                            prefs.setLastLocation(currentLocation);
                         }
                     });
             boolean isServiceRunning = isMyServiceRunning(RiderService.class);
@@ -142,7 +142,8 @@ public class SplashActivity extends BaseActivity implements LocationListener, Us
         prefs = UserSharedPreferences.get(this, PreferenceType.RIDER);
         prefs.addLoginStatusListener(this);
         if (prefs.isLoggedIn()) {
-            tryLogin("+233554022344");
+            currentLocation = prefs.getLastLocation();
+            startMainActivity(currentLocation);
         }
     }
 
