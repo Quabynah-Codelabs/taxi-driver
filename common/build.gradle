@@ -75,4 +75,8 @@ dependencies {
     implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true;
     }
+
+//    def room_version = "2.2.0-alpha02"
+//    implementation "androidx.room:room-runtime:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
 }

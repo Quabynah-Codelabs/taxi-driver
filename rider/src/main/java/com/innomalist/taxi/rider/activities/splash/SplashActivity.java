@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 
@@ -28,6 +27,8 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.innomalist.taxi.common.activities.login.LoginActivity;
 import com.innomalist.taxi.common.components.BaseActivity;
+import com.innomalist.taxi.common.custom.PreferenceType;
+import com.innomalist.taxi.common.custom.UserSharedPreferences;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
@@ -53,11 +54,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.UUID;
 
 import io.fabric.sdk.android.Fabric;
 
-public class SplashActivity extends BaseActivity implements LocationListener {
+public class SplashActivity extends BaseActivity implements LocationListener, UserSharedPreferences.LoginStateListener {
     MyPreferenceManager SP;
     ActivitySplashBinding binding;
     int RC_SIGN_IN = 123;
@@ -66,6 +67,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
     LatLng currentLocation;
     boolean isErrored = false;
     boolean goingToOpen = false;
+    private UserSharedPreferences prefs;
 
     private PermissionListener permissionlistener = new PermissionListener() {
         @SuppressLint("MissingPermission")
@@ -137,6 +139,11 @@ public class SplashActivity extends BaseActivity implements LocationListener {
         SP = MyPreferenceManager.getInstance(getApplicationContext());
         checkPermissions();
 
+        prefs = UserSharedPreferences.get(this, PreferenceType.RIDER);
+        prefs.addLoginStatusListener(this);
+        if (prefs.isLoggedIn()) {
+            tryLogin("+233554022344");
+        }
     }
 
     private void checkPermissions() {
@@ -253,6 +260,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
         if (phone.substring(0, 1).equals("+"))
             phone = phone.substring(1);
         CommonUtils.rider = new Rider.Builder()
+                .setUID(UUID.randomUUID().toString())
                 .setMobileNumber(Long.parseLong(phone))
                 .setFirstName("Dennis")
                 .setLastName("Bilson")
@@ -263,6 +271,7 @@ public class SplashActivity extends BaseActivity implements LocationListener {
                 .setStatus("live")
                 .setMedia(new Media())
                 .build();
+        prefs.setLoggedIn(CommonUtils.rider);
         startMainActivity(currentLocation);
         // todo: do some phone auth process
 //        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
@@ -319,6 +328,24 @@ public class SplashActivity extends BaseActivity implements LocationListener {
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @Override
+    public void onLogin() {
+        Debugger.logMessage("User is logged in");
+        startMainActivity(currentLocation);
+    }
+
+    @Override
+    public void onLogout() {
+        // Do nothing
+        Debugger.logMessage("User is not logged in");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        prefs.removeLoginStatusListener(this);
     }
 
 }

@@ -65,9 +65,9 @@ import com.gun0912.tedpermission.TedPermission;
 import com.innomalist.taxi.common.activities.chargeAccount.ChargeAccountActivity;
 import com.innomalist.taxi.common.activities.transactions.TransactionsActivity;
 import com.innomalist.taxi.common.activities.travels.TravelsActivity;
+import com.innomalist.taxi.common.custom.UserSharedPreferences;
 import com.innomalist.taxi.common.events.GetStatusEvent;
 import com.innomalist.taxi.common.events.GetStatusResultEvent;
-import com.innomalist.taxi.common.events.NotificationPlayerId;
 import com.innomalist.taxi.common.events.ProfileInfoChangedEvent;
 import com.innomalist.taxi.common.location.MapHelper;
 import com.innomalist.taxi.common.models.CRUD;
@@ -104,9 +104,6 @@ import com.innomalist.taxi.rider.events.ServiceRequestErrorEvent;
 import com.innomalist.taxi.rider.events.ServiceRequestEvent;
 import com.innomalist.taxi.rider.events.ServiceRequestResultEvent;
 import com.innomalist.taxi.rider.ui.RiderBaseActivity;
-//import com.onesignal.OSSubscriptionObserver;
-//import com.onesignal.OSSubscriptionStateChanges;
-//import com.onesignal.OneSignal;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -120,7 +117,11 @@ import java.util.Locale;
 
 import static org.greenrobot.eventbus.ThreadMode.MAIN;
 
-public class MainActivity extends RiderBaseActivity implements OnMapReadyCallback, ServiceCarousalFragment.OnServicesCarousalFragmentListener, LocationListener/*, OSSubscriptionObserver*/ {
+//import com.onesignal.OSSubscriptionObserver;
+//import com.onesignal.OSSubscriptionStateChanges;
+//import com.onesignal.OneSignal;
+
+public class MainActivity extends RiderBaseActivity implements OnMapReadyCallback, ServiceCarousalFragment.OnServicesCarousalFragmentListener, LocationListener, UserSharedPreferences.LoginStateListener/*, OSSubscriptionObserver*/ {
 
     ActivityMainBinding binding;
     MyPreferenceManager SP;
@@ -148,7 +149,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
         selectedService = service;
         travel.setCostBest(service.getCost());
         binding.buttonRequest.setEnabled(true);
-        if(minutesFromNow == 0)
+        if (minutesFromNow == 0)
             binding.buttonRequest.setText(getString(R.string.confirm_service, service.getTitle()));
         else {
             Calendar calendar = Calendar.getInstance();
@@ -186,15 +187,36 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
 
     public void onSelectTimeClicked(View view) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, (view1, hourOfDay, minute) -> {
-            int _minutesFromNow = (hourOfDay * 60 + minute) -  (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 + Calendar.getInstance().get(Calendar.MINUTE));
+            int _minutesFromNow = (hourOfDay * 60 + minute) - (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 + Calendar.getInstance().get(Calendar.MINUTE));
             binding.buttonRequest.setText(getString(R.string.book_later_button, selectedService == null ? "" : selectedService.getTitle(), hourOfDay, minute));
-            if(_minutesFromNow < 0) {
+            if (_minutesFromNow < 0) {
                 AlertDialogBuilder.show(MainActivity.this, getString(R.string.time_is_past_now));
             } else {
                 minutesFromNow = _minutesFromNow;
             }
         }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true);
         timePickerDialog.show();
+    }
+
+    @Override
+    public void onLogin() {
+        // User is logged in, update UI
+        if (prefs.isLoggedIn()) {
+            // todo: navigate user to home page
+            Debugger.logMessage("User is signed in already");
+        }
+    }
+
+    @Override
+    public void onLogout() {
+        // User is not signed in
+        Debugger.logMessage("User is not signed in yet");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        prefs.removeLoginStatusListener(this);
     }
 
     private enum MarkerMode {
@@ -325,6 +347,9 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
             return true;
         });
         fillInfo();
+
+        prefs.addLoginStatusListener(this);
+
     }
 
     private void goBackFromDestinationSelection() {
@@ -525,7 +550,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
             event.showAlert(this);
             return;
         }
-        if(minutesFromNow > 0) {
+        if (minutesFromNow > 0) {
             AlertDialogBuilder.show(MainActivity.this, "Your travel has been booked. Get back to app closer to your travel time to see your driver's info and location.", AlertDialogBuilder.DialogButton.OK, result -> {
                 goBackFromServiceSelection();
                 eventBus.post(new GetStatusEvent());
@@ -618,6 +643,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
             AlertDialogBuilder.show(MainActivity.this, getString(R.string.message_exit), AlertDialogBuilder.DialogButton.OK_CANCEL, result -> {
                 if (result == AlertDialogBuilder.DialogResult.OK)
                     MainActivity.this.finishAffinity();
+                prefs.removeLoginStatusListener(MainActivity.this);
             });
         if (markerMode == MarkerMode.destination)
             goBackFromDestinationSelection();
@@ -641,6 +667,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
             ((TextView) header.findViewById(R.id.navigation_header_charge)).setText(getString(R.string.drawer_header_balance, CommonUtils.rider.getBalance()));
             ImageView imageView = header.findViewById(R.id.navigation_header_image);
             DataBinder.setMedia(imageView, CommonUtils.rider.getMedia());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -715,7 +742,7 @@ public class MainActivity extends RiderBaseActivity implements OnMapReadyCallbac
     public void OnGetStatusResultReceived(GetStatusResultEvent event) {
         if (event.hasError())
             return;
-        if(minutesFromNow == 0) {
+        if (minutesFromNow == 0) {
             AlertDialogBuilder.show(MainActivity.this, getString(R.string.recovery_travel_message_rider), getString(R.string.message_default_title), AlertDialogBuilder.DialogButton.OK, result -> {
                 Intent intent = new Intent(MainActivity.this, TravelActivity.class);
                 intent.putExtra("travel", event.travel.toJson());

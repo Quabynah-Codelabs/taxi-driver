@@ -7,10 +7,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.innomalist.taxi.common.BR;
+import com.innomalist.taxi.common.custom.BaseUser;
 
-public class Rider extends BaseObservable {
+public class Rider extends BaseObservable implements BaseUser {
 
-
+    public String uid;
     public long id;
     @Expose
     @SerializedName("first_name")
@@ -52,7 +53,8 @@ public class Rider extends BaseObservable {
     public Rider() {
     }
 
-    public Rider(long id, String firstName, String lastName, Media media, long mobileNumber, String status, String email, Gender gender, Double balance, String address) {
+    public Rider(String uid, long id, String firstName, String lastName, Media media, long mobileNumber, String status, String email, Gender gender, Double balance, String address) {
+        this.uid = uid;
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -68,9 +70,14 @@ public class Rider extends BaseObservable {
     public static class Builder {
         long id, mobileNumber;
         Gender gender;
-        String firstName, lastName, status, email, address;
+        String uid, firstName, lastName, status, email, address;
         Double balance;
         Media media;
+
+        public Builder setUID(String uid) {
+            this.uid = uid;
+            return this;
+        }
 
         public Builder setId(long id) {
             this.id = id;
@@ -123,7 +130,7 @@ public class Rider extends BaseObservable {
         }
 
         public Rider build() {
-            return new Rider(this.id, this.firstName, this.lastName,this.media, this.mobileNumber,
+            return new Rider(this.uid, this.id, this.firstName, this.lastName, this.media, this.mobileNumber,
                     this.status, this.email, this.gender, this.balance, this.address);
         }
     }
@@ -135,6 +142,14 @@ public class Rider extends BaseObservable {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public long getId() {
