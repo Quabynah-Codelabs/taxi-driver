@@ -4,24 +4,25 @@ const express = require("express"),
   server = http.createServer(app),
   io = require("socket.io").listen(server);
 app.get("/", (req, res) => {
-  res.send("Taxi driver server is running on port 3000");
+  res.send("Taxi driver server is running on port 5001");
 });
 
 io.on("connection", socket => {
   console.log("user connected");
 
-  socket.on("join", function(userNickname) {
-    console.log(userNickname + " : has joined the chat ");
+  socket.on("calculateFare", () => {
+      console.log("Calculating fare");
 
-    socket.broadcast.emit(
-      "userjoinedthechat",
-      userNickname + " : has joined the chat "
-    );
+  });
+
+  socket.on("disconnect", function() {
+    console.log("user has left ");
+    socket.broadcast.emit("userdisconnect", " user has left");
   });
 });
 
-server.listen(3000, () => {
-  console.log("Node app is running on port 3000");
+server.listen(5001, () => {
+  console.log("Node app is running on port 5001");
 });
 
 module.exports = app;
