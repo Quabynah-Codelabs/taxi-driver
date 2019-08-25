@@ -210,6 +210,7 @@ public class MainActivity extends DriverBaseActivity implements OnMapReadyCallba
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRequestsReceived(GetRequestsResultEvent event) {
         loadingRequestsLoadingDialog.dismiss();
+        Debugger.logMessage("onRequestsReceived: " + event.response);
         if (event.response == ServerResponse.DRIVER_IS_OFFLINE) {
             binding.switchConnection.setOnCheckedChangeListener(null);
             binding.switchConnection.setChecked(false);
