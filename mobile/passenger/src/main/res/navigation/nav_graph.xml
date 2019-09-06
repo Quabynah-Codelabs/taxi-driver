@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@id/navigation_home"
+        android:name="dev.trotrohailer.passenger.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_request_trips"
+            app:destination="@id/navigation_request_trips"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="extra_pickup"
+            app:argType="com.google.android.gms.maps.model.LatLng" />
+        <argument
+            android:name="extra_dropoff"
+            app:argType="com.google.android.gms.maps.model.LatLng" />
+    </fragment>
+    <fragment
+        android:id="@id/navigation_settings"
+        android:name="dev.trotrohailer.passenger.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/settings_fragment">
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_profile"
+            app:destination="@id/navigation_profile" />
+        <argument
+            android:name="extra_user"
+            app:argType="dev.trotrohailer.shared.data.User" />
+    </fragment>
+    <fragment
+        android:id="@id/navigation_trips"
+        android:name="dev.trotrohailer.passenger.ui.trip.TripFragment"
+        android:label="@string/title_trips"
+        tools:layout="@layout/trip_fragment" />
+    <fragment
+        android:id="@id/navigation_about"
+        android:name="dev.trotrohailer.driver.about.AboutFragment"
+        android:label="@string/title_about"
+        tools:layout="@layout/about_fragment" />
+    <fragment
+        android:id="@id/navigation_profile"
+        android:name="dev.trotrohailer.passenger.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/profile_fragment">
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_settings"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation_settings" />
+    </fragment>
+    <fragment
+        android:id="@id/navigation_request_trips"
+        android:name="dev.trotrohailer.passenger.ui.trip.RequestTripFragment"
+        android:label="Request Trip"
+        tools:layout="@layout/request_trip_fragment">
+        <action
+            android:id="@+id/action_navigation_request_trips_to_navigation_home"
+            app:popUpTo="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_request_trips_to_navigation_find_driver"
+            app:destination="@id/navigation_find_driver">
+            <argument
+                android:name="extra_destination"
+                app:argType="com.google.android.gms.maps.model.LatLng" />
+            <argument
+                android:name="extra_destination_address"
+                app:argType="string" />
+            <argument
+                android:name="extra_pickup"
+                app:argType="com.google.android.gms.maps.model.LatLng" />
+            <argument
+                android:name="extra_pickup_address"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@id/navigation_promotions"
+        android:name="dev.trotrohailer.passenger.ui.promotions.PromotionsFragment"
+        android:label="@string/title_promotions"
+        tools:layout="@layout/promotions_fragment" />
+    <fragment
+        android:id="@id/navigation_coupons"
+        android:name="dev.trotrohailer.passenger.ui.coupons.CouponsFragment"
+        android:label="@string/title_coupons"
+        tools:layout="@layout/coupons_fragment" />
+    <fragment
+        android:id="@id/navigation_find_driver"
+        android:name="dev.trotrohailer.passenger.ui.driver.FindDriverFragment"
+        android:label="Find Driver"
+        tools:layout="@layout/find_driver_fragment">
+        <action
+            android:id="@+id/action_navigation_find_driver_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

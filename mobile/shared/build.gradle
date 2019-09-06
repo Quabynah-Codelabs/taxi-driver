@@ -1,0 +1,87 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply from: '../aac.gradle'
+apply from: '../app.gradle'
+apply from: '../location.gradle'
+apply from: '../firebase.gradle'
+apply from: '../network.gradle'
+apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master/git-versioner.gradle'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode gitVersion.version
+        versionName gitVersionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+
+        buildConfigField("String","HYPER_TRACK_PUB_KEY","\"${pub_key}\"")
+        buildConfigField("String","HYPER_TRACK_ACCT_ID","\"${acct_id}\"")
+        buildConfigField("String","HYPER_TRACK_ACCT_SECRET","\"${acct_secret}\"")
+        buildConfigField("String","HYPER_TRACK_FCM","\"${fcm_key}\"")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation": "$projectDir/schemas".toString()
+                ]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Lottie
+    def lottieVersion = "3.0.7"
+    api "com.airbnb.android:lottie:$lottieVersion"
+
+    // GeoFirestore
+    api 'com.github.imperiumlabs:GeoFirestore-Android:v1.5.0'
+
+    // HyperTrack
+    api("com.hypertrack:hypertrack:3.4.3@aar") {transitive = true}
+    api 'com.hypertrack:hypertrack-views:0.2.0'
+}
+
+kapt {
+    useBuildCache = true
+}
+
+androidExtensions {
+    experimental = true
+}

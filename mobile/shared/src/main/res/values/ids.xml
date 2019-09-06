@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Common-->
+    <item name="navigation_home" type="id" />
+    <item name="navigation_settings" type="id" />
+    <item name="navigation_about" type="id" />
+    <item name="navigation_trips" type="id" />
+    <item name="navigation_coupons" type="id" />
+    <item name="navigation_promotions" type="id" />
+    <item name="navigation_find_driver" type="id" />
+    <item name="navigation_request_trips" type="id" />
+
+    <!--Passenger-->
+    <item name="navigation_profile" type="id" />
+
+    <!--Driver-->
+    <item name="navigation_earning" type="id" />
+</resources>

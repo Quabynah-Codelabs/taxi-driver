@@ -1,0 +1,97 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply from: 'https://raw.githubusercontent.com/passsy/gradle-GitVersioner/master/git-versioner.gradle'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        applicationId "dev.trotrohailer.passenger"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode gitVersion.version
+        versionName gitVersionName
+        archivesBaseName = "passenger"
+        manifestPlaceholders += [google_maps_api_key: "\"${google_maps_key}\""]
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "com.google.android.gms.maps.model.LatLng",
+                "MAP_VIEWPORT_BOUND_NE",
+                "new com.google.android.gms.maps.model.LatLng(${map_viewport_bound_ne})"
+        buildConfigField "com.google.android.gms.maps.model.LatLng",
+                "MAP_VIEWPORT_BOUND_SW",
+                "new com.google.android.gms.maps.model.LatLng(${map_viewport_bound_sw})"
+
+        buildConfigField "float", "MAP_CAMERA_FOCUS_ZOOM", "${map_camera_focus_zoom}"
+
+        resValue "dimen", "map_camera_bearing", "${map_default_camera_bearing}"
+        resValue "dimen", "map_camera_target_lat", "${map_default_camera_target_lat}"
+        resValue "dimen", "map_camera_target_lng", "${map_default_camera_target_lng}"
+        resValue "dimen", "map_camera_tilt", "${map_default_camera_tilt}"
+        resValue "dimen", "map_camera_zoom", "${map_default_camera_zoom}"
+        resValue "dimen", "map_viewport_min_zoom", "${map_viewport_min_zoom}"
+        resValue "dimen", "map_viewport_max_zoom", "${map_viewport_max_zoom}"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/core_debug.kotlin_module'
+        exclude 'META-INF/core_release.kotlin_module'
+    }
+    lintOptions {
+        // If set to true, turns off analysis progress reporting by lint.
+        quiet true
+        // if set to true (default), stops the build if errors are found.
+        abortOnError false
+        // if true, only report errors.
+        ignoreWarnings true
+        // Eliminates UnusedResources false positives for resources used in DataBinding layouts
+        checkGeneratedSources = true
+        // Running lint over the debug variant is enough
+        checkReleaseBuilds false
+        disable 'MissingDefaultResource', "InvalidPackage", "MissingTranslation"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    implementation project(":shared")
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+    implementation 'me.dm7.barcodescanner:zxing:1.9.8'
+}
+apply plugin: 'com.google.gms.google-services'
