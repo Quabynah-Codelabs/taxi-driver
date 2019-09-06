@@ -5,7 +5,9 @@
     <string name="instagram" translatable="false"></string>
     <string name="facebook" translatable="false"></string>
     <string name="playStore" translatable="false"></string>
-    <string name="server_address" translatable="false">http://10.0.2.2:8080/</string>
+<!--    <string name="server_address" translatable="false">https://us-central1-taxi-driver-8c874.cloudfunctions.net/api/</string>-->
+    <string name="server_address" translatable="false">http://10.0.2.2:5001/taxi-driver-8c874/us-central1/api/</string>
+<!--    <string name="server_address" translatable="false">http://10.0.2.2:8080/</string>-->
     <string name="fabric_key" templateMergeStrategy="preserve" translatable="false"></string>
     <string name="stripe_publishable_key" translatable="false"></string>
     <string name="payment_currency" translatable="false">usd</string>

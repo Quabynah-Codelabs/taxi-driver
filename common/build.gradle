@@ -49,6 +49,7 @@ dependencies {
     api 'com.google.maps.android:android-maps-utils:0.5'
     api 'com.github.medyo:android-about-page:1.2.1'
     api 'org.greenrobot:eventbus:3.1.1'
+    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
     api 'com.google.code.gson:gson:2.8.5'
     api 'de.psdev.licensesdialog:licensesdialog:1.8.3'
     api('com.weiwangcn.betterspinner:library-material:1.1.0') {
@@ -68,11 +69,14 @@ dependencies {
     api 'com.github.MAXDeliveryNG:slideview:1.1.0'
     api 'com.github.sharish:CreditCardView:v1.0.4'
 //    api 'com.onesignal:OneSignal:3.10.7'
-    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
     implementation 'com.braintreepayments.api:drop-in:3.7.1'
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'com.github.savvyapps:ToggleButtonLayout:java-SNAPSHOT'
     implementation ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true;
     }
+
+//    def room_version = "2.2.0-alpha02"
+//    implementation "androidx.room:room-runtime:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
 }

@@ -2,10 +2,13 @@ package com.innomalist.taxi.driver.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.innomalist.taxi.common.components.BaseActivity;
+import com.innomalist.taxi.common.custom.PreferenceType;
+import com.innomalist.taxi.common.custom.UserSharedPreferences;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
@@ -18,11 +21,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class DriverBaseActivity extends BaseActivity {
     MyPreferenceManager SP;
+    protected UserSharedPreferences prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SP = MyPreferenceManager.getInstance(getApplicationContext());
+        this.prefs = UserSharedPreferences.get(getApplicationContext(), PreferenceType.DRIVER);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class DriverBaseActivity extends BaseActivity {
         onReconnected();
     }
 
-    public void onReconnected(){
+    public void onReconnected() {
 
     }
 }

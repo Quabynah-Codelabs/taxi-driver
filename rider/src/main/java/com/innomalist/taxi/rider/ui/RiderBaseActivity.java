@@ -6,12 +6,12 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.innomalist.taxi.common.components.BaseActivity;
+import com.innomalist.taxi.common.custom.PreferenceType;
+import com.innomalist.taxi.common.custom.UserSharedPreferences;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
-import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
 import com.innomalist.taxi.rider.R;
 import com.innomalist.taxi.rider.services.RiderService;
@@ -21,11 +21,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class RiderBaseActivity extends BaseActivity {
     MyPreferenceManager SP;
+    protected UserSharedPreferences prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SP = MyPreferenceManager.getInstance(getApplicationContext());
+        this.prefs = UserSharedPreferences.get(getApplicationContext(), PreferenceType.RIDER);
     }
 
     @Override

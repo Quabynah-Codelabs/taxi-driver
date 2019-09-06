@@ -8,11 +8,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.innomalist.taxi.common.BR;
+import com.innomalist.taxi.common.custom.BaseUser;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Driver extends BaseObservable implements Serializable {
+public class Driver extends BaseObservable implements Serializable, BaseUser {
     @SerializedName("registration_timestamp")
     private Timestamp registrationTimestamp;
 
@@ -86,15 +87,19 @@ public class Driver extends BaseObservable implements Serializable {
     @SerializedName("status")
     private String status;
 
+    @Expose
+    public String uid;
+
     public Driver() {
     }
 
-    public Driver(Timestamp registrationTimestamp, String accountNumber, Media media,
+    public Driver(String uid, Timestamp registrationTimestamp, String accountNumber, Media media,
                   Media carMedia, String carPlate, String address, Gender gender,
                   Integer rating, int infoChanged, String lastName, int reviewCount,
                   String carColor, String certificateNumber, String password, Double balance,
                   Integer carProductionYear,
                   int id, long mobileNumber, String firstName, Car car, String email, String status) {
+        this.uid = uid;
         this.registrationTimestamp = registrationTimestamp;
         this.accountNumber = accountNumber;
         this.media = media;
@@ -133,6 +138,14 @@ public class Driver extends BaseObservable implements Serializable {
 
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Bindable
@@ -315,11 +328,16 @@ public class Driver extends BaseObservable implements Serializable {
         Double balance;
         Gender gender;
         Car car;
-        String accountNumber, carPlate, address, lastName, carColor, certificateNumber,
+        String uid, accountNumber, carPlate, address, lastName, carColor, certificateNumber,
                 password, firstName, status, email;
         Integer rating, carProductionYear;
         int infoChanged, reviewCount, id;
         long mobileNumber;
+
+        public Builder setUID(String uid) {
+            this.uid = uid;
+            return this;
+        }
 
         public Builder setRegistrationTimestamp(Timestamp registrationTimestamp) {
             this.registrationTimestamp = registrationTimestamp;
@@ -432,7 +450,7 @@ public class Driver extends BaseObservable implements Serializable {
         }
 
         public Driver build() {
-            return new Driver(this.registrationTimestamp, accountNumber, media, carMedia, carPlate, address,
+            return new Driver(uid, registrationTimestamp, accountNumber, media, carMedia, carPlate, address,
                     Gender.male, rating, infoChanged, lastName, reviewCount, carColor,
                     certificateNumber, password, balance, carProductionYear, id, mobileNumber, firstName, car,
                     email, status);

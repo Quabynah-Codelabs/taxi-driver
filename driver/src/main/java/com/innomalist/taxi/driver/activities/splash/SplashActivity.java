@@ -17,6 +17,8 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.innomalist.taxi.common.activities.login.LoginActivity;
 import com.innomalist.taxi.common.components.BaseActivity;
+import com.innomalist.taxi.common.custom.PreferenceType;
+import com.innomalist.taxi.common.custom.UserSharedPreferences;
 import com.innomalist.taxi.common.events.BackgroundServiceStartedEvent;
 import com.innomalist.taxi.common.events.ConnectEvent;
 import com.innomalist.taxi.common.events.ConnectResultEvent;
@@ -27,6 +29,7 @@ import com.innomalist.taxi.common.models.Media;
 import com.innomalist.taxi.common.utils.AlertDialogBuilder;
 import com.innomalist.taxi.common.utils.AlerterHelper;
 import com.innomalist.taxi.common.utils.CommonUtils;
+import com.innomalist.taxi.common.utils.Debugger;
 import com.innomalist.taxi.common.utils.MyPreferenceManager;
 import com.innomalist.taxi.driver.DriverEventBusIndex;
 import com.innomalist.taxi.driver.R;
@@ -41,15 +44,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import io.fabric.sdk.android.Fabric;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements UserSharedPreferences.LoginStateListener {
     MyPreferenceManager SP;
     ActivitySplashBinding binding;
     int RC_SIGN_IN = 123;
     String lastPhoneNumber = "";
     boolean startRequested = false;
+    private UserSharedPreferences prefs;
 
     private PermissionListener permissionlistener = new PermissionListener() {
         @Override
@@ -106,6 +111,9 @@ public class SplashActivity extends BaseActivity {
         binding.loginButton.setOnClickListener(onLoginClicked);
         SP = MyPreferenceManager.getInstance(getApplicationContext());
         checkPermissions();
+
+        prefs = UserSharedPreferences.get(this, PreferenceType.DRIVER);
+        prefs.addLoginStatusListener(this);
     }
 
     private void checkPermissions() {
@@ -211,6 +219,7 @@ public class SplashActivity extends BaseActivity {
 
         // todo: get from database server
         CommonUtils.driver = new Driver.Builder()
+                .setUID(UUID.randomUUID().toString())
                 .setMobileNumber(Long.parseLong(phone))
                 .setFirstName("Quabynah")
                 .setLastName("Bilson")
@@ -231,6 +240,7 @@ public class SplashActivity extends BaseActivity {
                 .setGender(Gender.male)
                 .setInfoChanged(1)
                 .build();
+        prefs.setLoggedIn(CommonUtils.driver);
         startMainActivity();
 //        eventBus.post(new LoginEvent(Long.valueOf(phone), BuildConfig.VERSION_CODE));
     }
@@ -265,5 +275,18 @@ public class SplashActivity extends BaseActivity {
             AlerterHelper.showError(SplashActivity.this, getString(R.string.login_failed));
             goToLoginMode();
         }
+    }
+
+    @Override
+    public void onLogin() {
+        // User is logged
+        Debugger.logMessage("Driver is logged in already");
+        startMainActivity();
+    }
+
+    @Override
+    public void onLogout() {
+        // Logged out
+        Debugger.logMessage("Driver logged out");
     }
 }
