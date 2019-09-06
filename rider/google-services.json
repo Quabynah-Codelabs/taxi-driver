@@ -52,6 +52,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "544535309799-rute2137ufqtimgdab3v97b0r3h82dea.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.innomalist.taxi.rider",
+            "certificate_hash": "00afc63bf321dcd662cb0f38e7bedfec26a25f34"
+          }
+        },
+        {
           "client_id": "544535309799-a8d4gaf78ed5eflkouc06e1pjla6j4q8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
